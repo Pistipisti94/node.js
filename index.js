@@ -2,6 +2,7 @@
 npm -y létrehozza a json csomagot
 npm install express telepíti a többi csomagot
 npm install mysql telepíti az adatbázis kapcsolathoz szügséges csomagokat
+npm install cors telepíti a liveszerver használatához szügséges csomagot
 A mappába létrehoztunk egy fájlt aminek a neve ".gitignore" ennek a tartalma /node_modules/
 node index.js  parancs indítja el a szervert
 Ctrl + C állítja le a szervert
@@ -13,12 +14,15 @@ const app = express(); //-- http szervert tudunk vele indítani
 
 const bodyParser = require('body-parser'); //bodyParser létrehozása
 
+const cors = require('corse');  //cors létrehozása
+app.use(cors);                  //cors használata
+
 app.use(bodyParser.urlencoded({ extended: false })); // bodyParser használata
 app.use(bodyParser.json()); // a bodyban mindig próbálja az adatokat json-é alakítani
 
 const mysql = require('mysql'); //mysql létrehozása
 const { throws } = require('assert');
- const database = mysql.createConnection({ //Database létrehozása
+const database = mysql.createConnection({ //Database létrehozása
     host: 'localhost',
     user: 'root',
     password: '',
@@ -57,10 +61,18 @@ app.post('/sanyi', (req, res) => { //küldeni sanyinak adatokat
 });
 
 //Adatbázis lekérdezése
-app.get('/tagok',(req,res) =>{                   //http://localhost:3000/tagok
-    let sqlcommand = 'SELECT * FROM `ugyfel`'   //Lekérdezés parancs tárolás
-    database.query(sqlcommand,(err,rows) =>{    //Meghívás lekérdezés
-        if(err) throw err;  //nem sikerült
+app.get('/tagok', (req, res) => {                   //http://localhost:3000/tagok
+    let sqlcommand = 'SELECT * FROM `ugyfel`';   //Lekérdezés parancs tárolás
+    database.query(sqlcommand, (err, rows) => {    //Meghívás lekérdezés
+        if (err) throw err;  //nem sikerült
+        res.send(rows); //Sikerült
+    });
+});
+
+app.get('/tagok/:id', (req, res) => {                                      //http://localhost:3000/tagok/[azon]
+    let sqlcommand = `SELECT * FROM ugyfel WHERE azon=${req.params.id}`;   //Lekérdezés azonosító szerint parancs tárolás
+    database.query(sqlcommand, (err, rows) => {                           //Meghívás lekérdezés
+        if (err) throw err;  //nem sikerült
         res.send(rows); //Sikerült
     });
 });
