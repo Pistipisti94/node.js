@@ -17,13 +17,15 @@ app.use(bodyParser.urlencoded({ extended: false })); // bodyParser használata
 app.use(bodyParser.json()); // a bodyban mindig próbálja az adatokat json-é alakítani
 
 const mysql = require('mysql'); //mysql létrehozása
-mysql.createConnection({ //Database megadása
+const { throws } = require('assert');
+ const database = mysql.createConnection({ //Database létrehozása
     host: 'localhost',
     user: 'root',
     password: '',
     database: 'tagdij' //ezt az adatbázist használtuk órán
 }
-).connect((err) => { //Csatlakozás megpróbálása
+);
+database.connect((err) => { //Csatlakozás megpróbálása
     if (err) throw err; //nem sikerült
     console.log('Connected');//sikerült
 });
@@ -54,7 +56,14 @@ app.post('/sanyi', (req, res) => { //küldeni sanyinak adatokat
     res.send(`Sanyi öcsém POST, id: ${id}, név: ${nev} `);  //kiírás      
 });
 
-
+//Adatbázis lekérdezése
+app.get('/tagok',(req,res) =>{                   //http://localhost:3000/tagok
+    let sqlcommand = 'SELECT * FROM `ugyfel`'   //Lekérdezés parancs tárolás
+    database.query(sqlcommand,(err,rows) =>{    //Meghívás lekérdezés
+        if(err) throw err;  //nem sikerült
+        res.send(rows); //Sikerült
+    });
+});
 
 
 app.listen(3000, () => {
