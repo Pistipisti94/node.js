@@ -14,7 +14,7 @@ const app = express(); //-- http szervert tudunk vele indítani
 
 const bodyParser = require('body-parser'); //bodyParser létrehozása
 
-const cors = require('corse');  //cors létrehozása
+const cors = require('cors');  //cors létrehozása
 app.use(cors);                  //cors használata
 
 app.use(bodyParser.urlencoded({ extended: false })); // bodyParser használata
