@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js és MySQL példa</title>
+    <!-- Link a saját CSS fájlhoz -->
+    <link rel="stylesheet" href="/css/style.css">
+    <!-- Link a Bootstrap stíluslapjához -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1>Ügyfelek listája</h1>
+        <div class="row">
+            <% ugyfelek.forEach(ugyfel=> { %>
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= ugyfel.azon %>
+                            </h5>
+                            <p class="card-text">Név: <%= ugyfel.nev %>
+                            </p>
+                            <p class="card-text">Született: <%= ugyfel.szulev %>
+                            </p>
+                            <p class="card-text">Irányítószám: <%= ugyfel.irszam %>
+                            </p>
+                            <p class="card-text">Származási ország: <%= ugyfel.orsz %>
+                            </p>
+                            <a href="/edit/<%= ugyfel.azon %>" class="btn btn-primary">Módosítás</a>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+        <br>
+
+        <!-- Űrlap az ügyfelek hozzáadásához -->
+        <div class="mt-4">
+            <h2>Új ügyfél hozzáadása</h2>
+            <form action="/add" method="post">
+                <div class="mb-3">
+                    <label for="azon" class="form-label">Azonosító</label>
+                    <input type="number" min="2000" value="2000" class="form-control" id="azon" name="azon" required>
+                </div>
+                <div class="mb-3">
+                    <label for="nev" class="form-label">Neve:</label>
+                    <input type="text" class="form-control" id="nev" name="nev" required>
+                </div>
+                <div class="mb-3">
+                    <label for="szulev" class="form-label">Született</label>
+                    <input type="number" min="1960" value="2000" class="form-control" id="szulev" name="szulev"
+                        required>
+                </div>
+                <div class="mb-3">
+                    <label for="irszam" class="form-label">Irszám:</label>
+                    <input type="number" value="1234" placeholder="1234" maxlength="4" class="form-control" id="irszam"
+                        name="irszam" required>
+                </div>
+                <div class="mb-3">
+                    <label for="orsz" class="form-label">Nemzetiség:</label>
+                    <input type="text" maxlength="4" value="H" class="form-control" id="orsz" name="orsz" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Hozzáadás</button>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <!-- Link a Bootstrap scriptjéhez (JavaScript és Popper.js szükséges) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
