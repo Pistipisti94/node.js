@@ -15,7 +15,7 @@ const app = express(); //-- http szervert tudunk vele indítani
 const bodyParser = require('body-parser'); //bodyParser létrehozása
 
 const cors = require('cors');  //cors létrehozása
-app.use(cors);                  //cors használata
+app.use(cors());                  //cors használata
 
 app.use(bodyParser.urlencoded({ extended: false })); // bodyParser használata
 app.use(bodyParser.json()); // a bodyban mindig próbálja az adatokat json-é alakítani
@@ -35,7 +35,7 @@ database.connect((err) => { //Csatlakozás megpróbálása
 });
 
 app.get('/', (req, res) => { // http://localhost:3000 esetén
-    res.send("Csá öcsi"); // ezt írja ki
+    res.send("KALAPÁCS"); // ezt írja ki
 });
 
 app.get('/sanyi', (req, res) => { //  http://localhost:3000/sanyi esetén 
@@ -78,7 +78,7 @@ app.get('/tagok/:id', (req, res) => {                                      //htt
 });
 
 
-app.listen(3000, () => {
-    console.log('A szerver fut a 3000-s porton'); //localhost:3000
+app.listen(3001, () => {
+    console.log('A szerver fut a 3001-s porton'); //localhost:3000
 });
 // app.listen után nem szabad írni bajos lehet a futása
