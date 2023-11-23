@@ -21,9 +21,13 @@ const database = mysql.createConnection({ //Database létrehozása
 }
 );
 database.connect((err) => { //Csatlakozás megpróbálása
-    if (err) throw err; //nem sikerült
-    console.log('Connected');//sikerült
-});
+    if (err) {
+        console.error('Hiba a MySQL kapcsolat során: ' + err.stack);
+        return;
+      }
+      console.log('Sikeres MySQL kapcsolat, ID: ' + database.threadId);
+    });
+
 
 app.get("/", (req, res) => {
     res.sendFile(__dirname + "/index.html");
@@ -51,61 +55,45 @@ app.get('/teszt/:id', (req, res) => {                                      //htt
 //*******CRUD******** */
 //******************* */
 //Create
-exports.create = (req, res) => {
-    const azon = req.body.azon;
-    const nev = req.body.nev;
-    const szulev = req.body.szulev;
-    const irszam = req.body.irszam;
-    const orsz = req.body.orsz;
-  
-    const query = `INSERT INTO ugyfel (azon, nev, szulev, irszam, orsz) VALUES (?, ?, ?, ?, ?);`;
-  
-    database.query(query, [azon,nev,szulev,irszam,orsz], (error, results) => {
-      if (error) {
-        console.error(error);
-        res.status(500).send("Hiba történt a felhasználó létrehozásakor.");
-        return;
+app.post('/users', (req, res) => {
+    const { username, email } = req.body;
+    const INSERT_USER_QUERY = `INSERT INTO users (username, email) VALUES (?, ?)`;
+    database.query(INSERT_USER_QUERY, [username, email], (err, result) => {
+      if (err) {
+        res.status(500).send('Hiba a felhasználó létrehozása során.');
+      } else {
+        res.status(201).send('Felhasználó létrehozva.');
       }
-  
-      res.status(200).send("A felhasználó sikeresen létre lett hozva.");
     });
-  };
+  });
+
 //READ
 
 
-const connection = mysql.createConnection({
-  host: "localhost",
-  database: "tagdij",
-  user: "root",
-  password: "",
+app.get('/tagok', (req, res) => {                   //http://localhost:3005/tagok
+    let sqlcommand = 'SELECT * FROM `ugyfel`';   //Lekérdezés parancs tárolás
+    database.query(sqlcommand, (err, rows) => {    //Meghívás lekérdezés
+        if (err) throw err;  //nem sikerült
+        res.send(rows); //Sikerült
+    });
 });
 
-connection.connect();
+app.get('/tagok/:id', (req, res) => {                                      //http://localhost:3005/tagok/[azon]
+    let sqlcommand = `SELECT * FROM ugyfel WHERE azon=${req.params.id}`;   //Lekérdezés azonosító szerint parancs tárolás
+    database.query(sqlcommand, (err, rows) => {                           //Meghívás lekérdezés
+        if (err) throw err;  //nem sikerült
+        res.send(rows); //Sikerült
+    });
+});
 
-exports.read = (req, res) => {
-  const id = parseInt(req.query.id);
+//UPDATE
 
-  const query = `
-    SELECT *
-    FROM ugyfel
-    WHERE id = ?;
-  `;
 
-  connection.query(query, [id], (error, results) => {
-    if (error) {
-      console.error(error);
-      res.status(500).send("Hiba történt a felhasználó lekérdezésekor.");
-      return;
-    }
 
-    if (results.length === 0) {
-      res.status(404).send("A felhasználó nem található.");
-      return;
-    }
+//DELETE
 
-    res.send(results[0]);
-  });
-};
+
+
 
 //******************* */
 //*******CRUD******** */
