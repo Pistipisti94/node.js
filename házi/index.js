@@ -100,6 +100,6 @@ app.get('/tagok/:id', (req, res) => {                                      //htt
 //******************* */
 
 app.listen(3005, () => {
-    console.log('A szerver fut a 3005-s porton'); //localhost:3000
+    console.log('A szerver fut a http://localhost/3005 -s porton'); //localhost:3000
 });
 // app.listen után nem szabad írni bajos lehet a futása
